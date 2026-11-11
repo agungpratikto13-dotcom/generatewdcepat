@@ -108,6 +108,59 @@ button:active {
   margin-top: 12px;
   min-height: 18px;
 }
+  .toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  background: #f3f5f7;
+  border-radius: 9px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  margin: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #aaa;
+  border-radius: 30px;
+  transition: .3s;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+
+.switch input:checked + .slider {
+  background: #16a05d;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(24px);
+}
 </style>
 </head>
 
@@ -121,16 +174,22 @@ button:active {
 
 <textarea id="data" placeholder="Paste data WD di sini..."></textarea>
 
-<label>Tambah Nominal Otomatis:</label>
+<label>Pengaturan Tambahan Nominal</label>
 
-<div class="row">
-  <button class="plus" onclick="tambah(2500)">
-    + 2.500
-  </button>
+<div class="toggle-row">
+  <span>Tambahan 2.500</span>
+  <label class="switch">
+    <input type="checkbox" id="toggle2500">
+    <span class="slider"></span>
+  </label>
+</div>
 
-  <button class="plus" onclick="tambah(6500)">
-    + 6.500
-  </button>
+<div class="toggle-row">
+  <span>Tambahan 6.500</span>
+  <label class="switch">
+    <input type="checkbox" id="toggle6500">
+    <span class="slider"></span>
+  </label>
 </div>
 
 <button class="excel" onclick="copyExcel()">
@@ -160,6 +219,8 @@ button:active {
 const input = document.getElementById("data");
 const statusBox = document.getElementById("status");
 let tambahanNominal = 0;
+let tambahan2500 = false;
+let tambahan6500 = false;
   
 // Format angka
 function formatAngka(angka) {
@@ -237,18 +298,19 @@ function copyExcel() {
 }
 
 function copyNominal() {
-
   const transaksi = bacaData();
+
+  const tambahan =
+    (tambahan2500 ? 2500 : 0) +
+    (tambahan6500 ? 6500 : 0);
 
   const hasil = transaksi
     .filter(x => Number.isFinite(x.nominal))
-    .map(x => formatAngka(
-      x.nominal + tambahanNominal
-    ));
+    .map(x => formatAngka(x.nominal + tambahan));
 
   salin(
     hasil.join("\n"),
-    "Nominal berhasil disalin ke Excel!"
+    "Nominal berhasil disalin!"
   );
 }
 
@@ -283,6 +345,16 @@ function resetData() {
   }
 }
 
+  document.getElementById("toggle2500")
+.addEventListener("change", function() {
+  tambahan2500 = this.checked;
+});
+
+document.getElementById("toggle6500")
+.addEventListener("change", function() {
+  tambahan6500 = this.checked;
+});
+  
 </script>
 
 </body>
