@@ -27,17 +27,41 @@ body {
 }
 
 
+
 .container {
   width: 95%;
   max-width: 1200px;
   margin: 20px auto;
-  padding: 28px;
-  background: rgba(23, 35, 56, 0.90);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  box-shadow: 0 15px 45px #0005;
+  padding: 30px;
+
+  background: rgba(17, 29, 49, 0.94);
+
+  border: 2px solid #3b82f6;
+  border-radius: 22px;
+
+  box-shadow:
+    0 0 12px #3b82f655,
+    0 0 30px #2563eb33,
+    0 20px 60px #0008;
+
+  backdrop-filter: blur(15px);
+
+  animation: frameGlow 4s ease-in-out infinite;
+  transition: .3s ease;
 }
+
+@keyframes frameGlow {
+  0%, 100% {
+    border-color: #2563eb;
+    box-shadow: 0 0 15px #2563eb55, 0 20px 50px #0008;
+  }
+
+  50% {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 25px #8b5cf688, 0 20px 60px #0008;
+  }
+}
+
 
 h2 {
   text-align: center;
@@ -114,18 +138,84 @@ button:active {
   background: linear-gradient(135deg,#2563eb,#1d4ed8);
 }
 
+
 .excel {
   width: 100%;
   margin-top: 22px;
+  padding: 17px;
+
   color: white;
-  background: linear-gradient(135deg,#3b82f6,#2563eb);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+
+  background: linear-gradient(
+    120deg,
+    #1d4ed8,
+    #3b82f6,
+    #6366f1,
+    #1d4ed8
+  );
+
+  background-size: 300% 300%;
+  border: 1px solid #60a5fa;
+  border-radius: 13px;
+
+  box-shadow: 0 0 15px #2563eb66;
+
+  animation: buttonLight 4s ease infinite;
 }
 
 .nominal {
   width: 100%;
-  margin-top: 12px;
+  margin-top: 13px;
+  padding: 17px;
+
   color: white;
-  background: linear-gradient(135deg,#10b981,#059669);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+
+  background: linear-gradient(
+    120deg,
+    #047857,
+    #10b981,
+    #34d399,
+    #047857
+  );
+
+  background-size: 300% 300%;
+  border: 1px solid #34d399;
+  border-radius: 13px;
+
+  box-shadow: 0 0 15px #10b98166;
+
+  animation: buttonLight 4s ease infinite;
+}
+
+@keyframes buttonLight {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.excel:hover,
+.nominal:hover {
+  transform: translateY(-3px) scale(1.01);
+  filter: brightness(1.2);
+}
+
+.excel:active,
+.nominal:active {
+  transform: scale(.97);
 }
 
 .reset {
@@ -324,6 +414,55 @@ button:active {
   }
 }
 
+  
+.warning-text {
+  margin-top: 25px;
+  padding: 15px 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  background: linear-gradient(
+    90deg,
+    #38bdf8,
+    #a78bfa,
+    #34d399,
+    #facc15,
+    #38bdf8
+  );
+
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  animation: warnaBerjalan 5s linear infinite,
+             teksHidup 2s ease-in-out infinite;
+}
+
+@keyframes warnaBerjalan {
+  to {
+    background-position: 300% center;
+  }
+}
+
+@keyframes teksHidup {
+  0%, 100% {
+    transform: scale(1);
+    opacity: .8;
+  }
+  50% {
+    transform: scale(1.025);
+    opacity: 1;
+  }
+}
+
+  .excel,
+.nominal {
+  text-shadow: 0 2px 5px rgba(0,0,0,.4);
+}
+  
 </style>
 </head>
 
@@ -340,7 +479,7 @@ button:active {
 <label>Pengaturan Tambahan Nominal</label>
 
 <div class="toggle-row">
-  <span>Tambahan 2.500</span>
+  <span>ADM 2.500</span>
   <label class="switch">
     <input type="checkbox" id="toggle2500">
     <span class="slider"></span>
@@ -348,7 +487,7 @@ button:active {
 </div>
 
 <div class="toggle-row">
-  <span>Tambahan 6.500</span>
+ <span>ADM 6.500</span>
   <label class="switch">
     <input type="checkbox" id="toggle6500">
     <span class="slider"></span>
@@ -365,11 +504,13 @@ button:active {
   
 <div id="status"></div>
 
-<div class="info">
-  Copy Excel: Nama rekening kolom A, User ID kolom B.<br>
-  Copy Nominal: Semua nominal WD disalin satu per baris.<br>
-  Tombol tambah nominal berlaku untuk semua transaksi Withdraw.
-</div>
+
+<div class="warning-text">
+  ⚡ JANGAN TERBURU-BURU, SANTAI SAJA TAPI PASTI.
+  DAN INGAT YA, JANGAN MAU MISTAKE KARENA SALAH COPY.
+  ITU NAMANYA MISTAKE TOLOL! ⚡
+</div>v>
+
 
 </div>
 
@@ -475,18 +616,20 @@ function copyExcel() {
   salin(hasil.join("\n"), "Data Excel berhasil disalin!");
 }
 
+
 function copyNominal() {
   const transaksi = bacaData();
 
   const hasil = transaksi
     .filter(x => Number.isFinite(x.nominal))
-    .map(x => formatAngka(x.nominal + tambahanNominal));
+    .map(x => "-" + formatAngka(x.nominal + tambahanNominal));
 
   salin(
     hasil.join("\n"),
     "Nominal berhasil disalin!"
   );
 }
+
 
 async function salin(teks, pesan) {
 
