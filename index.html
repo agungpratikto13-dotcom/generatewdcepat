@@ -159,7 +159,8 @@ button:active {
 
 const input = document.getElementById("data");
 const statusBox = document.getElementById("status");
-
+let tambahanNominal = 0;
+  
 // Format angka
 function formatAngka(angka) {
   return Math.round(angka).toLocaleString("en-US");
@@ -191,32 +192,11 @@ function bacaData() {
 
 // Tambah nominal semua transaksi
 function tambah(jumlah) {
-
-  const lines = input.value.split(/\r?\n/);
-  let total = 0;
-
-  for (let i = 0; i < lines.length; i++) {
-
-    if (lines[i].startsWith("Withdraw\t")) {
-
-      const kolom = lines[i].split("\t");
-      const nominal = Number(
-        (kolom[3] || "").replace(/,/g, "").trim()
-      );
-
-      if (Number.isFinite(nominal)) {
-        kolom[3] = formatAngka(nominal + jumlah);
-        lines[i] = kolom.join("\t");
-        total++;
-      }
-    }
-  }
-
-  input.value = lines.join("\n");
+  tambahanNominal += jumlah;
 
   statusBox.textContent =
-    total + " transaksi berhasil ditambah " +
-    formatAngka(jumlah);
+    "Tambahan nominal aktif: " +
+    formatAngka(tambahanNominal);
 }
 
 // Copy Excel: Nama rekening kolom A, User ID kolom B
@@ -256,19 +236,22 @@ function copyExcel() {
   salin(hasil.join("\n"), "Data Excel berhasil disalin!");
 }
 
-// Copy semua nominal
 function copyNominal() {
 
   const transaksi = bacaData();
 
   const hasil = transaksi
     .filter(x => Number.isFinite(x.nominal))
-    .map(x => formatAngka(x.nominal));
+    .map(x => formatAngka(
+      x.nominal + tambahanNominal
+    ));
 
-  salin(hasil.join("\n"), "Nominal berhasil disalin!");
+  salin(
+    hasil.join("\n"),
+    "Nominal berhasil disalin ke Excel!"
+  );
 }
 
-// Salin clipboard
 async function salin(teks, pesan) {
 
   try {
@@ -292,11 +275,11 @@ async function salin(teks, pesan) {
   }
 }
 
-// Reset data
 function resetData() {
-  if (confirm("Yakin ingin menghapus semua data?")) {
+  if (confirm("Yakin ingin menghapus semua data dan tambahan nominal?")) {
     input.value = "";
-    statusBox.textContent = "Data berhasil dihapus.";
+    tambahanNominal = 0;
+    statusBox.textContent = "Data dan tambahan nominal berhasil direset.";
   }
 }
 
