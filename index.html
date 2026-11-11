@@ -15,17 +15,26 @@ body {
   margin: 0;
   padding: 25px 15px;
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: #0f172a;
+
+  background-color: #0f172a;
+  background-image: url("https://mariterbang.io/download/Aj4nk9t1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
   color: #f8fafc;
 }
+
 
 .container {
   width: 95%;
   max-width: 1200px;
   margin: 20px auto;
   padding: 28px;
-  background: #172338;
-  border: 1px solid #29374d;
+  background: rgba(23, 35, 56, 0.90);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 20px;
   box-shadow: 0 15px 45px #0005;
 }
@@ -211,15 +220,23 @@ button:active {
   }
 }
 
-  
-/* Background lebih hidup */
+  /* Background gambar + efek modern */
 body {
-  background:
-    radial-gradient(ellipse at 10% 10%, #263b70 0%, transparent 40%),
-    radial-gradient(ellipse at 90% 90%, #26315f 0%, transparent 40%),
-    linear-gradient(135deg, #0b1120, #172338);
+  background-color: #0b1120;
+
+  background-image:
+    linear-gradient(
+      rgba(10, 15, 30, 0.35),
+      rgba(10, 15, 30, 0.35)
+    ),
+    url("https://mariterbang.io/download/Aj4nk9t1.jpg");
+
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
 
 /* Container dengan efek glow */
 .container {
@@ -361,7 +378,6 @@ button:active {
 const input = document.getElementById("data");
 const statusBox = document.getElementById("status");
 let tambahanNominal = 0;
-let tambahanNominal = 0;
 
 const toggle2500 = document.getElementById("toggle2500");
 const toggle6500 = document.getElementById("toggle6500");
@@ -495,15 +511,6 @@ async function salin(teks, pesan) {
   }
 }
 
-  document.getElementById("toggle2500")
-.addEventListener("change", function() {
-  tambahan2500 = this.checked;
-});
-
-document.getElementById("toggle6500")
-.addEventListener("change", function() {
-  tambahan6500 = this.checked;
-});
   
 </script>
 
