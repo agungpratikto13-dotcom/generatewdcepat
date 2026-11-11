@@ -617,18 +617,20 @@ function copyExcel() {
 }
 
 
+
 function copyNominal() {
   const transaksi = bacaData();
 
   const hasil = transaksi
     .filter(x => Number.isFinite(x.nominal))
-    .map(x => "-" + formatAngka(x.nominal + tambahanNominal));
+    .map(x => "-" + Math.round(x.nominal + tambahanNominal));
 
   salin(
     hasil.join("\n"),
     "Nominal berhasil disalin!"
   );
 }
+
 
 
 async function salin(teks, pesan) {
