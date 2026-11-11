@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator WD Otomatis</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f3f6;
+  padding: 20px;
+  margin: 0;
+}
+
+.container {
+  max-width: 750px;
+  margin: auto;
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px #00000012;
+}
+
+h2 {
+  text-align: center;
+  color: #222;
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 15px 0 8px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: monospace;
+}
+
+button {
+  border: none;
+  padding: 13px;
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.row button {
+  flex: 1;
+}
+
+.plus {
+  background: #167d45;
+}
+
+.excel {
+  background: #1769aa;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.nominal {
+  background: #159653;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.reset {
+  background: #777;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.info {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+#status {
+  text-align: center;
+  font-size: 13px;
+  color: #168044;
+  margin-top: 12px;
+  min-height: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>GENERATOR WD OTOMATIS</h2>
+
+<label>Masukkan Data WD:</label>
+
+<textarea id="data" placeholder="Paste data WD di sini..."></textarea>
+
+<label>Tambah Nominal Otomatis:</label>
+
+<div class="row">
+  <button class="plus" onclick="tambah(2500)">
+    + 2.500
+  </button>
+
+  <button class="plus" onclick="tambah(6500)">
+    + 6.500
+  </button>
+</div>
+
+<button class="excel" onclick="copyExcel()">
+  COPY EXCEL (NAMA + USER ID)
+</button>
+
+<button class="nominal" onclick="copyNominal()">
+  COPY NOMINAL
+</button>
+
+<button class="reset" onclick="resetData()">
+  RESET DATA
+</button>
+
+<div id="status"></div>
+
+<div class="info">
+  Copy Excel: Nama rekening kolom A, User ID kolom B.<br>
+  Copy Nominal: Semua nominal WD disalin satu per baris.<br>
+  Tombol tambah nominal berlaku untuk semua transaksi Withdraw.
+</div>
+
+</div>
+
+<script>
+
+const input = document.getElementById("data");
+const statusBox = document.getElementById("status");
+
+// Format angka
+function formatAngka(angka) {
+  return Math.round(angka).toLocaleString("en-US");
+}
+
+// Membaca data transaksi WD
+function bacaData() {
+  const lines = input.value.split(/\r?\n/);
+  const hasil = [];
+
+  for (let i = 0; i < lines.length; i++) {
+
+    if (lines[i].startsWith("Withdraw\t")) {
+
+      const kolom = lines[i].split("\t");
+
+      hasil.push({
+        index: i,
+        nominalIndex: 3,
+        nominal: Number(
+          (kolom[3] || "").replace(/,/g, "").trim()
+        )
+      });
+    }
+  }
+
+  return hasil;
+}
+
+// Tambah nominal semua transaksi
+function tambah(jumlah) {
+
+  const lines = input.value.split(/\r?\n/);
+  let total = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+
+    if (lines[i].startsWith("Withdraw\t")) {
+
+      const kolom = lines[i].split("\t");
+      const nominal = Number(
+        (kolom[3] || "").replace(/,/g, "").trim()
+      );
+
+      if (Number.isFinite(nominal)) {
+        kolom[3] = formatAngka(nominal + jumlah);
+        lines[i] = kolom.join("\t");
+        total++;
+      }
+    }
+  }
+
+  input.value = lines.join("\n");
+
+  statusBox.textContent =
+    total + " transaksi berhasil ditambah " +
+    formatAngka(jumlah);
+}
+
+// Copy Excel: Nama rekening kolom A, User ID kolom B
+function copyExcel() {
+
+  const lines = input.value.split(/\r?\n/);
+  const hasil = [];
+
+  for (let i = 0; i < lines.length; i++) {
+
+    if (lines[i].startsWith("Withdraw\t")) {
+
+      const userID = (lines[i - 1] || "").trim();
+
+      let rekening = "";
+
+      for (let j = i + 1; j < lines.length; j++) {
+        if (lines[j].startsWith("Withdraw\t")) break;
+
+        if (/^[^\t,\n]+,\s*[^,\n]+,\s*.+$/.test(lines[j].trim())) {
+          rekening = lines[j].trim();
+          break;
+        }
+      }
+
+      if (userID && rekening) {
+        const bagian = rekening.split(",");
+        const nama = bagian.slice(2).join(",").trim();
+
+        if (nama) {
+          hasil.push(nama + "\t" + userID);
+        }
+      }
+    }
+  }
+
+  salin(hasil.join("\n"), "Data Excel berhasil disalin!");
+}
+
+// Copy semua nominal
+function copyNominal() {
+
+  const transaksi = bacaData();
+
+  const hasil = transaksi
+    .filter(x => Number.isFinite(x.nominal))
+    .map(x => formatAngka(x.nominal));
+
+  salin(hasil.join("\n"), "Nominal berhasil disalin!");
+}
+
+// Salin clipboard
+async function salin(teks, pesan) {
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(teks);
+    } else {
+      const area = document.createElement("textarea");
+      area.value = teks;
+      document.body.appendChild(area);
+      area.select();
+      const berhasil = document.execCommand("copy");
+      area.remove();
+
+      if (!berhasil) throw new Error("Copy gagal");
+    }
+
+    statusBox.textContent = pesan;
+
+  } catch (error) {
+    statusBox.textContent = "Gagal menyalin. Coba gunakan browser Chrome.";
+  }
+}
+
+// Reset data
+function resetData() {
+  if (confirm("Yakin ingin menghapus semua data?")) {
+    input.value = "";
+    statusBox.textContent = "Data berhasil dihapus.";
+  }
+}
+
+</script>
+
+</body>
+</html>
