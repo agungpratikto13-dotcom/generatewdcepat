@@ -6,117 +6,136 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generator WD Otomatis</title>
 <style>
-* { box-sizing: border-box; }
+
+* {
+  box-sizing: border-box;
+}
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f1f3f6;
-  padding: 20px;
   margin: 0;
+  padding: 25px 15px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #0f172a;
+  color: #f8fafc;
 }
 
 .container {
-  max-width: 750px;
-  margin: auto;
-  background: white;
-  padding: 22px;
-  border-radius: 12px;
-  box-shadow: 0 3px 15px #00000012;
+  max-width: 720px;
+  margin: 30px auto;
+  padding: 28px;
+  background: #172338;
+  border: 1px solid #29374d;
+  border-radius: 20px;
+  box-shadow: 0 15px 45px #0005;
 }
 
 h2 {
   text-align: center;
-  color: #222;
-  margin-top: 0;
+  font-size: 27px;
+  letter-spacing: 1px;
+  margin: 5px 0 25px;
+  color: #60a5fa;
 }
 
 label {
   display: block;
-  font-weight: bold;
-  margin: 15px 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 18px 0 10px;
+  color: #cbd5e1;
 }
+
 
 textarea {
   width: 100%;
-  min-height: 300px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 7px;
-  font-size: 13px;
-  line-height: 1.6;
+  min-height: 450px;
+  height: 450px;
+  padding: 20px;
   resize: vertical;
+  background: #0b1424;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 12px;
   font-family: monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  outline: none;
+  transition: .2s;
+}
+
+textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px #3b82f633;
+}
+
+
+textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px #3b82f633;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 button {
   border: none;
-  padding: 13px;
-  border-radius: 7px;
-  font-size: 15px;
-  font-weight: bold;
+  padding: 15px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  color: white;
+  transition: .2s;
+}
+
+button:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
 }
 
 button:active {
   transform: scale(.98);
 }
 
-.row {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.row button {
-  flex: 1;
-}
-
 .plus {
-  background: #167d45;
+  flex: 1;
+  color: white;
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
 }
 
 .excel {
-  background: #1769aa;
   width: 100%;
-  margin-top: 18px;
+  margin-top: 22px;
+  color: white;
+  background: linear-gradient(135deg,#3b82f6,#2563eb);
 }
 
 .nominal {
-  background: #159653;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
+  color: white;
+  background: linear-gradient(135deg,#10b981,#059669);
 }
 
 .reset {
-  background: #777;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
+  color: white;
+  background: #475569;
 }
 
-.info {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.5;
-  margin-top: 12px;
-}
-
-#status {
-  text-align: center;
-  font-size: 13px;
-  color: #168044;
-  margin-top: 12px;
-  min-height: 18px;
-}
-  .toggle-row {
+.toggle-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px;
-  background: #f3f5f7;
-  border-radius: 9px;
-  margin-top: 10px;
-  font-weight: bold;
+  padding: 17px;
+  margin-top: 12px;
+  background: #0f1b2d;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  color: #f8fafc;
 }
 
 .switch {
@@ -135,9 +154,9 @@ button:active {
 
 .slider {
   position: absolute;
-  cursor: pointer;
   inset: 0;
-  background: #aaa;
+  cursor: pointer;
+  background: #475569;
   border-radius: 30px;
   transition: .3s;
 }
@@ -145,8 +164,8 @@ button:active {
 .slider:before {
   content: "";
   position: absolute;
-  width: 22px;
   height: 22px;
+  width: 22px;
   left: 3px;
   bottom: 3px;
   background: white;
@@ -155,12 +174,43 @@ button:active {
 }
 
 .switch input:checked + .slider {
-  background: #16a05d;
+  background: #10b981;
 }
 
 .switch input:checked + .slider:before {
   transform: translateX(24px);
 }
+
+#status {
+  text-align: center;
+  color: #4ade80;
+  font-size: 13px;
+  margin-top: 18px;
+  min-height: 20px;
+}
+
+.info {
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-top: 18px;
+}
+
+@media (max-width: 500px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 18px;
+    margin: 10px auto;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+}
+
 </style>
 </head>
 
@@ -219,8 +269,28 @@ button:active {
 const input = document.getElementById("data");
 const statusBox = document.getElementById("status");
 let tambahanNominal = 0;
-let tambahan2500 = false;
-let tambahan6500 = false;
+let tambahanNominal = 0;
+
+const toggle2500 = document.getElementById("toggle2500");
+const toggle6500 = document.getElementById("toggle6500");
+
+toggle2500.addEventListener("change", function() {
+  if (this.checked) {
+    toggle6500.checked = false;
+    tambahanNominal = 2500;
+  } else {
+    tambahanNominal = 0;
+  }
+});
+
+toggle6500.addEventListener("change", function() {
+  if (this.checked) {
+    toggle2500.checked = false;
+    tambahanNominal = 6500;
+  } else {
+    tambahanNominal = 0;
+  }
+});
   
 // Format angka
 function formatAngka(angka) {
@@ -300,13 +370,9 @@ function copyExcel() {
 function copyNominal() {
   const transaksi = bacaData();
 
-  const tambahan =
-    (tambahan2500 ? 2500 : 0) +
-    (tambahan6500 ? 6500 : 0);
-
   const hasil = transaksi
     .filter(x => Number.isFinite(x.nominal))
-    .map(x => formatAngka(x.nominal + tambahan));
+    .map(x => formatAngka(x.nominal + tambahanNominal));
 
   salin(
     hasil.join("\n"),
