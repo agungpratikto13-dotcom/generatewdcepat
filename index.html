@@ -86,14 +86,22 @@ textarea {
   height: 200px;
   padding: 15px;
   resize: vertical;
-  background: #0b1424;
-  color: #e2e8f0;
-  border: 1px solid #334155;
+
+  background: #080f1e;
+  color: #ffffff;
+
+  border: 2px solid #3b82f6;
   border-radius: 12px;
-  font-family: monospace;
-  font-size: 13px;
-  line-height: 1.6;
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.8;
+
+  letter-spacing: 0.3px;
+
   outline: none;
+  text-shadow: 0 0 1px #ffffff;
 }
 
 textarea:focus {
@@ -229,12 +237,17 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 49%;
   padding: 17px;
   margin-top: 12px;
   background: #0f1b2d;
   border: 1px solid #334155;
   border-radius: 12px;
   color: #f8fafc;
+}
+
+.container {
+  /* CSS container lainnya tetap */
 }
 
 .switch {
@@ -462,6 +475,48 @@ button:active {
 .nominal {
   text-shadow: 0 2px 5px rgba(0,0,0,.4);
 }
+
+  .adm-container {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
+}
+
+.adm-container .toggle-row {
+  flex: 1;
+  width: 50%;
+  margin-top: 12px;
+  min-width: 0;
+}
+
+  .copy-container {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.copy-container button {
+  flex: 1;
+  width: 50%;
+  margin-top: 0;
+  padding: 15px 8px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 500px) {
+  .copy-container {
+    gap: 8px;
+  }
+
+  .copy-container button {
+    font-size: 11px;
+    padding: 14px 5px;
+  }
+}
   
 </style>
 </head>
@@ -476,31 +531,37 @@ button:active {
 
 <textarea id="data" placeholder="Paste data WD di sini..."></textarea>
 
-<label>Pengaturan Tambahan Nominal</label>
+<div class="adm-container">
 
-<div class="toggle-row">
-  <span>ADM 2.500</span>
-  <label class="switch">
-    <input type="checkbox" id="toggle2500">
-    <span class="slider"></span>
-  </label>
+  <div class="toggle-row">
+    <span>ADM 2.500</span>
+    <label class="switch">
+      <input type="checkbox" id="toggle2500">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="toggle-row">
+    <span>ADM 6.500</span>
+    <label class="switch">
+      <input type="checkbox" id="toggle6500">
+      <span class="slider"></span>
+    </label>
+  </div>
+
 </div>
 
-<div class="toggle-row">
- <span>ADM 6.500</span>
-  <label class="switch">
-    <input type="checkbox" id="toggle6500">
-    <span class="slider"></span>
-  </label>
+<div class="copy-container">
+
+  <button class="excel" onclick="copyExcel()">
+    COPY EXCEL (NAMA + USER ID)
+  </button>
+
+  <button class="nominal" onclick="copyNominal()">
+    COPY NOMINAL
+  </button>
+
 </div>
-
-<button class="excel" onclick="copyExcel()">
-  COPY EXCEL (NAMA + USER ID)
-</button>
-
-<button class="nominal" onclick="copyNominal()">
-  COPY NOMINAL
-</button>
   
 <div id="status"></div>
 
