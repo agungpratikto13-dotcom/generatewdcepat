@@ -624,6 +624,7 @@ const bankTanpaADM = [
   "SMBC"
 ];
 
+
 function bacaData() {
   const lines = input.value.split(/\r?\n/);
   const hasil = [];
@@ -641,19 +642,25 @@ function bacaData() {
       let bank = "";
 
       for (let j = i + 1; j < lines.length; j++) {
+
         if (lines[j].startsWith("Withdraw\t")) break;
 
-        if (/^[^\t,\n]+,\s*[^,\n]+,\s*.+$/.test(lines[j].trim())) {
-          const bagian = lines[j].split(",");
-          bank = bagian[1].trim();
+        const baris = lines[j].trim();
+
+        if (/^[^,\t]+,\s*[^,\t]+,\s*.+$/.test(baris)) {
+          const bagian = baris.split(",");
+          bank = bagian[0].trim();
           break;
         }
       }
 
-      const bankNormal = bank.toUpperCase().replace(/[^A-Z0-9]/g, "");
+      const bankNormal = bank.toUpperCase()
+        .replace(/[^A-Z0-9]/g, "");
 
       const bebasADM = bankTanpaADM.some(nama =>
-        bankNormal === nama.replace(/[^A-Z0-9]/g, "")
+        bankNormal.includes(
+          nama.replace(/[^A-Z0-9]/g, "")
+        )
       );
 
       hasil.push({
@@ -665,6 +672,7 @@ function bacaData() {
 
   return hasil;
 }
+
 
 
 // Tambah nominal semua transaksi
