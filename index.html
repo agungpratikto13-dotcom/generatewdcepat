@@ -608,6 +608,22 @@ function formatAngka(angka) {
 }
 
 // Membaca data transaksi WD
+
+const bankTanpaADM = [
+  "SEABANK",
+  "PERMATA",
+  "DANAMON",
+  "BSI",
+  "BANK JAGO",
+  "CIMB",
+  "OCBC",
+  "PANIN",
+  "NEO",
+  "PAPUA",
+  "JENIUS",
+  "SMBC"
+];
+
 function bacaData() {
   const lines = input.value.split(/\r?\n/);
   const hasil = [];
@@ -618,18 +634,38 @@ function bacaData() {
 
       const kolom = lines[i].split("\t");
 
+      const nominal = Number(
+        (kolom[3] || "").replace(/,/g, "").trim()
+      );
+
+      let bank = "";
+
+      for (let j = i + 1; j < lines.length; j++) {
+        if (lines[j].startsWith("Withdraw\t")) break;
+
+        if (/^[^\t,\n]+,\s*[^,\n]+,\s*.+$/.test(lines[j].trim())) {
+          const bagian = lines[j].split(",");
+          bank = bagian[1].trim();
+          break;
+        }
+      }
+
+      const bankNormal = bank.toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+      const bebasADM = bankTanpaADM.some(nama =>
+        bankNormal === nama.replace(/[^A-Z0-9]/g, "")
+      );
+
       hasil.push({
-        index: i,
-        nominalIndex: 3,
-        nominal: Number(
-          (kolom[3] || "").replace(/,/g, "").trim()
-        )
+        nominal: nominal,
+        bebasADM: bebasADM
       });
     }
   }
 
   return hasil;
 }
+
 
 // Tambah nominal semua transaksi
 function tambah(jumlah) {
@@ -679,18 +715,23 @@ function copyExcel() {
 
 
 
+
 function copyNominal() {
   const transaksi = bacaData();
 
   const hasil = transaksi
     .filter(x => Number.isFinite(x.nominal))
-    .map(x => "-" + Math.round(x.nominal + tambahanNominal));
+    .map(x => {
+      const adm = x.bebasADM ? 0 : tambahanNominal;
+      return "-" + Math.round(x.nominal + adm);
+    });
 
   salin(
     hasil.join("\n"),
     "Nominal berhasil disalin!"
   );
 }
+
 
 
 
